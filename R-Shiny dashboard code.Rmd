@@ -1,0 +1,170 @@
+---
+title: "Achievements of African-Americans"
+output: 
+  flexdashboard::flex_dashboard:
+    orientation: columns
+    vertical_layout: fill
+    css: styles.css
+runtime: shiny
+---
+
+```{r setup, include=FALSE}
+library(flexdashboard)
+library(shiny)
+library(tidyverse)
+library(readr)
+library(dplyr)
+library(ggplot2)
+library(magrittr)
+library(htmlwidgets)
+library(plotly)
+library(DT)
+library(highcharter)
+library(extrafontdb)
+```
+
+
+
+```{css my-content, echo = FALSE}
+
+body {
+  background: #0a0a0a;
+  padding: 60px 0 0 8px; 
+}
+
+.chart-title {
+    font-size: 20px;
+    font-weight:bold;
+}
+```
+
+
+```{r}
+data <- read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-06-09/firsts.csv')
+
+```
+
+
+Visualizations
+=======================================================================
+Column {data-width=200}
+-----------------------------------------------------------------------
+
+### Input Selection
+
+```{r .sidebar}
+sliderInput("years", "Select Year", 1738, 2019, c(1943,2005))
+selectInput("categories", "Select Category/Categories", data$category, multiple = TRUE, selected = "Military")
+
+```
+
+### Information
+
+```{r}
+renderText({
+   paste('The data represents achievements and many battles African-Americans faced against racism across their lives. This is in emphasis that Black Lives Matter and the data focuses on a celebration of these lives.')
+})
+```
+ 
+
+
+Column {data-width=500}
+-----------------------------------------------------------------------
+
+### Plot
+```{r}
+renderPlotly({
+   p <- data %>%
+  filter(category %in% input$categories & year >= input$years[1] & year <= input$years[2]) %>%
+     ggplot(aes(year, fill = category))+
+     geom_histogram(bins = 30, binwidth = 5)+
+     facet_wrap(~category)+
+     labs(title = "Distribution of achivements of African-Americans over time",
+          x = "Year", y = "Number of Accomplishments",
+          caption = "Plot by Rudra Patel & Vandana Sundareshan") +
+     theme(
+     plot.background = element_rect(fill = "#e6e68a", colour = NA),
+ 		 plot.title = element_text(family = "sans", colour = "black", size = 20, hjust = 0, lineheight = 1),
+     legend.title = element_text(size = 10, family = "sans"),
+     legend.text = element_text(size = 10, family = "sans")
+ 	)
+ ggplotly(p)
+ 
+ 
+ 
+ })
+```
+
+
+Column {data-width=200}
+-----------------------------------------------------------------------
+### Count
+```{r}
+renderValueBox({
+
+  nos <- data %>%
+  filter(year >= input$years[1] & year <= input$years[2]) %>%
+  summarise(category = n())
+
+valueBox(nos,
+         caption = 'Accomplishments received by African-Americans in the selected time frame.',
+         icon = 'fa-trophy', color = "green")
+})
+```
+
+
+### Accomplishments as per the selected category in the time frame
+```{r}
+renderGauge({
+ 
+nos <- data %>%
+  filter(category %in% input$categories & year >= input$years[1] & year <= input$years[2]) %>%
+  nrow()
+ 
+gauge(nos, min = 0, max = 479)
+
+})
+```
+
+
+### Treemap
+```{r}
+renderHighchart({
+
+options(highcharter.theme = hc_theme_smpl(tooltip = list(valueDecimals = 0)))
+
+summary.table <- data %>% 
+  group_by(category) %>% 
+  count(category) 
+
+hc <- summary.table %>%
+  hchart(
+    "treemap", 
+    hcaes(x = category, value = n, color = n)
+    ) %>%
+  hc_colorAxis(stops = color_stops(colors = viridis::cividis(8)))
+hc
+
+})
+```
+
+Data
+========================================================================
+
+Column {data-width=800}
+-----------------------------------------------------------------------
+
+### Dataset
+
+```{r}
+renderDataTable({
+  datatable(data %>%
+  filter(category %in% input$categories & year >= input$years[1] & year <= input$years[2]), rownames = FALSE,
+  extensions = 'Buttons', options = list(
+  dom = 'Bfrtip',
+  buttons = c('copy', 'csv', 'excel', 'pdf', 'print')
+  )
+)
+})
+```
+

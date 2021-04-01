@@ -1,0 +1,239 @@
+---
+title: "Achievements of African-Americans Over 3 Centuries"
+author: "Rudra Patel"
+
+output:
+  xaringan::moon_reader:
+    css: ["default", "tamu", "tamu-fonts"]
+    lib_dir: libs
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+---
+```{r setup, include=FALSE}
+options(htmltools.dir.version = FALSE)
+```
+
+
+# Dataset Selection
+.pull-left[
+```{r out.width = "100%", fig.align = "center", echo=FALSE}
+knitr::include_graphics("images/tweet.png")
+```
+
+ *Image credit: [Twitter](https://twitter.com/lucy_njokinjuki/status/1274651138596495360?s=20)* 
+]
+
+.pull-right[
+
+- Week 24 Tidy Tuesday
+
+- Dataset on Achievements of African-Americans
+
+- Describes the innovations of African-Americans over this time period in the fields of art, science, law, military, politics, religion and sports
+]
+---
+
+# Dataset  [firsts.csv](https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-06-09/firsts.csv) 
+
+```{r eval=require('DT'), tidy=FALSE, echo=FALSE, message=FALSE}
+library(readr)
+data <- read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-06-09/firsts.csv')
+
+DT::datatable(
+  head(data),
+  fillContainer = FALSE, options = list(pageLength = 1)
+)
+```
+
+1. Retrieved from: *[GitHub Tidy Tuesday](https://github.com/rfordatascience/tidytuesday/tree/master/data/2020/2020-06-09)* & Original Source: *[Wikipedia](https://en.wikipedia.org/wiki/List_of_African-American_firsts)*
+
+1. Columns: Year, Accomplishment, Person, Gender, and Category
+
+1. Data Collection: 18th century to 21st Century
+
+1. Description: First achievements of African-Americans in the fields of art, science, law, military, politics, religion and sports. It also goes in depth about the person who achieved a certain accomplishment in that particular year
+
+1. Entries: 479
+
+---
+class: inverse, center, middle
+background-image: url(https://media3.giphy.com/media/l0HlECuGCeTQKmcmc/giphy.gif)
+background-position: center
+class: center, bottom
+
+# Analyzing the author’s graph
+
+---
+
+# Graph
+
+.pull-left[
+
+```{r fig.height = 4 ,out.width = "100%", fig.align = "center", echo=FALSE}
+  knitr::include_graphics("images/graph_1.jpg")
+```
+Image Source: *[Tweet](https://twitter.com/lucy_njokinjuki/status/1274651138596495360/photo/1)*
+]
+
+.pull-right[
+
+- Purpose: To analyze the year wise achievements of the African-Americans. 
+- Lack of description
+- Need for approximation of count for each category
+- Scale on X axis is inappropriate as it has large year gap. 
+- Confusing color selection leading to a mix-up in categories
+- Difficulty in interpretation for a person who does not have an analytical background
+- Non- Interactive
+
+]
+---
+# Author's code 
+
+```{r eval=FALSE, tidy=FALSE}
+
+ggplot(firsts, aes(x = year, fill = category)) +
+  geom_histogram(bins = 30) +
+  labs(caption = "plot:@lucy_njokinjuki",
+           title = "Distribution of achivements of African-Americans over time",
+           x = "Year", y = "Count") +
+  theme(axis.line = element_line(size = 0.5, colour = "black"),
+            plot.title = element_text(family = "Calibri",
+                                               size = rel(1.2), face = "bold",
+                                               hjust = 0.5),
+            plot.subtitle = element_text(family = "Calibri", 
+                                                  size = rel(1.2), hjust = 0.5),
+            axis.title.x = element_text(family = "Calibri", 
+                                                  size = rel(1.0), hjust = 0.5),
+          axis.title.y = element_text(family = "Calibri", 
+                                      size = rel(1.0),
+                                      hjust = 0.5)) 
+
+```
+- Code Source: *[Twitter](https://github.com/LucyNjoki/Tidy_Tuesday/blob/master/African-American-Achievement/AfricanAmerican-09-06-2020.rmd)*
+
+- No bin width
+
+- Minimum libraries used. Could have been interactive by using more libraries like 'plotly'
+
+
+---
+background-image: url(https://media1.giphy.com/media/3o6MbsWjZwURvye0ko/giphy.gif)
+background-position: center
+class: center, bottom
+
+# Discussion
+
+---
+class: center, top
+# Are you satisfied every time when you search something on Google or other search engines?😵
+
+```{r out.width = "100%", fig.align = "center", echo=FALSE}
+knitr::include_graphics("images/discussion.png")
+```
+Source: *[Google](https://www.google.com/search?q=Are+you+satisfied+every+time+when+you+search+something+on+Google&oq=Are+you+satisfied+every+time+when+you+search+something+on+Google&aqs=chrome..69i57.276j0j7&sourceid=chrome&ie=UTF-8)*
+---
+background-image: url(https://i.gifer.com/origin/bb/bb284eb4a1dd38b14644499baea6edbe_w200.gif)
+background-position: top right
+
+# Aim for Modifications
+
+- To make the graph more interactive and user-friendly
+
+- To obtain maximum information from the graph with minimum number of clicks
+
+- Ensuring that the viewers receive a brief description on the data they want to analyze
+
+- Preventing the mix-up of categories in order to calculate the exact count
+
+
+
+---
+class: inverse
+
+# Adherence to 3S
+
+1.  *Simple* : ease with which the visual reports can be interpreted
+
+--
+
+1.  *Standard* : To handle complexities and disparities in presented data flawlessly and to eliminate redundancy.
+
+--
+
+1.  *Scalable* : To accommodate the growing volume of data without a hitch. This helps in better understanding of the graph.
+
+---
+background-image: url(https://i.gifer.com/RGh4.gif)
+background-position: cover
+class: inverse, bottom, center
+
+# Process
+
+---
+class: inverse
+
+
+```{r out.width= "60%", fig.align= "center",  echo=FALSE}
+knitr::include_graphics("images/flexdash.png")
+```
+
+--
+
+```{r out.width = "10%", fig.align = "left", echo=FALSE}
+knitr::include_graphics("images/shiny.png")
+```
+
+--
+
+```{r out.width = "20%", fig.align = "center", echo=FALSE}
+knitr::include_graphics("images/flex cover.png")
+```
+
+--
+
+```{r out.width = "10%", fig.align = "right", echo=FALSE}
+knitr::include_graphics("images/html.png")
+```
+
+
+---
+
+# Libraries used
+```{r out.width = "50%", fig.align = "center", echo=FALSE}
+knitr::include_graphics("images/library.png")
+```
+
+---
+
+class: middle
+
+# Time for Demo!!
+```{r out.width = "100%",fig.align = "center", echo=FALSE}
+knitr::include_graphics("images/dashboard.png")
+```
+
+---
+
+class: middle
+
+# Page 1: Data Visualization
+```{r out.width = "100%", fig.align = "center", echo=FALSE}
+knitr::include_graphics("images/dashboard_1.png")
+```
+---
+class: middle
+
+# Page 2: Analyzing the dataset
+```{r out.width = "100%", fig.align = "center", echo=FALSE}
+knitr::include_graphics("images/dashboard data.png")
+```
+
+---
+
+class: center, middle, inverse
+
+# Thanks!<br/>🙇
+
+The first achievements by African Americans in various fields historically marked footholds, often leading to more widespread cultural change. The shorthand phrase for this is *"breaking the color barrier."* <br/>*~[Wikipedia](https://en.wikipedia.org/wiki/List_of_African-American_firsts)*
